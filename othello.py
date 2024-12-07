@@ -9,12 +9,12 @@ UP, DOWN, LEFT, RIGHT = -10, 10, -1, 1
 UP_RIGHT, DOWN_RIGHT, DOWN_LEFT, UP_LEFT = -9, 11, 9, -11
 DIRECTIONS = (UP, UP_RIGHT, RIGHT, DOWN_RIGHT, DOWN, DOWN_LEFT, LEFT, UP_LEFT)
 
-def squares():
+def valid_squares():
     return [i for i in range(11, 89) if 1 <= (i % 10) <= 8]
 
 def initial_board():
     board = [OUTER] * 100
-    for i in squares():
+    for i in valid_squares():
         board[i] = EMPTY
     
     board[44], board[45] = WHITE, BLACK
@@ -35,7 +35,7 @@ def print_board(board):
 
 def is_valid(move):
 
-    return isinstance(move, int) and move in squares()
+    return isinstance(move, int) and move in valid_squares()
 
 def opponent(player):
     return BLACK if player is WHITE else WHITE
@@ -72,20 +72,18 @@ def make_flips(move, player, board, direction):
 
 
 class IllegalMoveError(Exception):
-#
     def __init__(self, player, move, board):
         self.player = player
         self.move = move
         self.board = board
-#
     def __str__(self):
         return '%s cannot move to square %d' % (PLAYERS[self.player], self.move)
 
 def legal_moves(player, board):
-    return [sq for sq in squares() if is_legal(sq, player, board)]
+    return [sq for sq in valid_squares() if is_legal(sq, player, board)]
 
 def any_legal_move(player, board):
-    return any(is_legal(sq, player, board) for sq in squares())
+    return any(is_legal(sq, player, board) for sq in valid_squares())
 
 def play(black_strategy, white_strategy):
     board = initial_board()
@@ -115,7 +113,7 @@ def get_move(strategy, player, board):
 def score(player, board):
     mine, theirs = 0, 0
     opp = opponent(player)
-    for sq in squares():
+    for sq in valid_squares():
         piece = board[sq]
         if piece == player: mine += 1
         elif piece == opp: theirs += 1

@@ -1,6 +1,6 @@
 
 
-class SarsaLearning():
+class SARSA():
     def __init__(self, epsilon = 0.25, alpha = 0.2, gamma = 0.99):
         self.qVals = {}
         self.epsilon = epsilon

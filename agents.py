@@ -1,5 +1,6 @@
 import othello
 import random
+import heapq
 
 def random_strategy(player, board):
     return random.choice(othello.legal_moves(player, board))
@@ -30,7 +31,7 @@ def weighted_score(player, board):
 #
     opp = othello.opponent(player)
     total = 0
-    for sq in othello.squares():
+    for sq in othello.valid_squares():
         if board[sq] == player:
             total += SQUARE_WEIGHTS[sq]
         elif board[sq] == opp:
@@ -51,30 +52,6 @@ def final_value(player, board):
 
 
 
-def minimax(player, board, depth, evaluate):
-
-    def value(board):
-        return -minimax(othello.opponent(player), board, depth-1, evaluate)[0]
-     
-    if depth == 0:
-        return evaluate(player, board), None
-    
-    moves = othello.legal_moves(player, board)
-     
-    if not moves:
-        if not othello.any_legal_move(othello.opponent(player), board):
-            return final_value(player, board), None
-        return value(board), None
-    
-    return max((value(othello.make_move(m, player, list(board))), m) for m in moves)
-
-def minimax_searcher(depth, evaluate):
-#
-    def strategy(player, board):
-        return minimax(player, board, depth, evaluate)[1]
-    return strategy
-
-
 def alphabeta(player, board, alpha, beta, depth, evaluate):
 #
     if depth == 0:
@@ -89,8 +66,17 @@ def alphabeta(player, board, alpha, beta, depth, evaluate):
             return final_value(player, board), None
         return value(board, alpha, beta), None
     
-    best_move = moves[0]
+    utilities = []
     for move in moves:
+        utilities.append(value(othello.make_move(move, player, list(board)), alpha, beta))
+    
+    ordered_set = [(utilities[i], moves[i]) for i in range(len(moves))]
+    heapq.heapify(ordered_set)
+    ordered_moves = [ordered_set[i][1] for i in range(len(ordered_set))]
+
+    
+    best_move = ordered_moves[0]
+    for move in ordered_moves:
         if alpha >= beta:
             break
         val = value(othello.make_move(move, player, list(board)), alpha, beta)
@@ -98,6 +84,8 @@ def alphabeta(player, board, alpha, beta, depth, evaluate):
             alpha = val
             best_move = move
     return alpha, best_move
+
+
 
 def alphabeta_searcher(depth, evaluate):
     def strategy(player, board):
