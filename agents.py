@@ -94,24 +94,23 @@ def alphabeta_searcher(depth, evaluate):
 
 
 class QLearning():
-    def __init__(self, alpha=0.01, epsilon=0.5, discount=0.9, evaluate = othello.weighted_score):
+    def __init__(self, alpha=0.1, epsilon=1, discount=0.9):
         
         self.alpha = alpha
         self.epsilon = epsilon
         self.discount = discount
-        self.evaluate = evaluate
         self.qVals = {}
 
     def getQValue(self, board, move):
         
-        if (board, move) in self.qVals:
-            return self.qVals[(board, move)]
+        if (tuple(board), move) in self.qVals:
+            return self.qVals[(tuple(board), move)]
         
         return 0.0
             
     def computeValueFromQValues(self, player, board):
         
-        moves = othello.legal_moves(board, player)
+        moves = othello.legal_moves(player, board)
         qValues = []
         for move in moves:
             qValues.append(self.getQValue(board, move))
@@ -120,7 +119,7 @@ class QLearning():
 
     def computeActionFromQValues(self, player, board):
         
-        bestValue = self.getValue(board)
+        bestValue = self.getValue(player, board)
         bestMoves = []
 
         for move in othello.legal_moves(player, board):
@@ -129,17 +128,17 @@ class QLearning():
         
         return random.choice(bestMoves) if len(bestMoves) > 0 else None
 
-    def getAction(self, board):
+    def getMove(self, player, board):
         
 
-        legalMoves = othello.legal_moves(board)
+        legalMoves = othello.legal_moves(player, board)
         move = None
         
         if(self.flipCoin(self.epsilon)):
             move = random.choice(legalMoves)
         
         elif len(legalMoves) > 0: 
-            move = self.getPolicy(board)
+            move = self.getPolicy(player, board)
 
         return move
     
@@ -147,23 +146,37 @@ class QLearning():
         r = random.random()
         return r < prob
 
-    def update(self, board, move, nextBoard, reward: float):
+    def update(self, player, prev_board, move, board):
         
+        reward = weighted_score(player, board) - weighted_score(player, prev_board)
         discount = self.discount
         alpha = self.alpha
-        qval = self.getQValue(board, move)
-        nextVal = self.getValue(nextBoard)
-
+        qval = self.getQValue(prev_board, move)
+        nextVal = self.getValue(player, board)
+        
+        self.EpsilonDecay()
+        
+        
         newQVal = qval + alpha * (reward + (discount * nextVal) - qval)
 
-        self.qVals[(board, move)] = newQVal
+        self.qVals[(tuple(prev_board), move)] = newQVal
 
-    def getPolicy(self, board):
-        return self.computeActionFromQValues(board)
+    def EpsilonDecay(self):
+        if self.epsilon > 0.0:
+            self.epsilon -= 0.05
 
-    def getValue(self, board):
-        return self.computeValueFromQValues(board)
+    def getPolicy(self, player, board):
+        return self.computeActionFromQValues(player, board)
+
+    def getValue(self, player, board):
+        return self.computeValueFromQValues(player, board)
     
-    
+    def QLearningAgent(self):
+       def strategy(player, prev_board):
+            move = self.getMove(player, prev_board)
+            board = othello.make_move(move, player, list(prev_board))
+            self.update(player, prev_board, move, board)
+            return self.getMove(player, prev_board)
+       return strategy
 
 
