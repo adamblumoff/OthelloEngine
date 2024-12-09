@@ -69,9 +69,27 @@ def SetAverageValues(total_dict, num_simulations):
         total_dict[key] /= num_simulations
     return total_dict
     
+def ListAllAgents():
+    print('Here are the list of agents you can choose from:')
+    print('1. random')
+    print('2. max-diff')
+    print('3. max-weighted-diff')
+    print('4. ab-diff')
+    print('5. ab-weighted-diff')
+
+def StartTournament():
+    print('Welcome to the Othello Tournament!')
+    random.seed(1)
+    ListAllAgents()
+    agent = input('Enter the name of the agent you want to test: ')
+    opponent = input('Enter the name of the opponent you want to test against: ')
+    num_simulations = int(input('Enter the number of simulations you want to run: '))
+    epochs = int(input('Enter the number of epochs you want to run for each simulation: '))
+    return agent, opponent, num_simulations, epochs
 
 def main():
-    RunMultipleSelectedSimulations(1, 10, 'ab-weighted-diff', 'random')
+    agent, opponent, num_simulations, epochs = StartTournament()
+    RunMultipleSelectedSimulations(num_simulations, epochs, agent, opponent)
 
 
 if __name__ == '__main__':

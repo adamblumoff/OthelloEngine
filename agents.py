@@ -91,3 +91,79 @@ def alphabeta_searcher(depth, evaluate):
     def strategy(player, board):
         return alphabeta(player, board, MIN_VALUE, MAX_VALUE, depth, evaluate)[1]
     return strategy
+
+
+class QLearning():
+    def __init__(self, alpha=0.01, epsilon=0.5, discount=0.9, evaluate = othello.weighted_score):
+        
+        self.alpha = alpha
+        self.epsilon = epsilon
+        self.discount = discount
+        self.evaluate = evaluate
+        self.qVals = {}
+
+    def getQValue(self, board, move):
+        
+        if (board, move) in self.qVals:
+            return self.qVals[(board, move)]
+        
+        return 0.0
+            
+    def computeValueFromQValues(self, player, board):
+        
+        moves = othello.legal_moves(board, player)
+        qValues = []
+        for move in moves:
+            qValues.append(self.getQValue(board, move))
+        
+        return max(qValues) if len(qValues) > 0 else 0.0
+
+    def computeActionFromQValues(self, player, board):
+        
+        bestValue = self.getValue(board)
+        bestMoves = []
+
+        for move in othello.legal_moves(player, board):
+            if self.getQValue(board, move) == bestValue:
+                bestMoves.append(move)
+        
+        return random.choice(bestMoves) if len(bestMoves) > 0 else None
+
+    def getAction(self, board):
+        
+
+        legalMoves = othello.legal_moves(board)
+        move = None
+        
+        if(self.flipCoin(self.epsilon)):
+            move = random.choice(legalMoves)
+        
+        elif len(legalMoves) > 0: 
+            move = self.getPolicy(board)
+
+        return move
+    
+    def flipCoin(self, prob):
+        r = random.random()
+        return r < prob
+
+    def update(self, board, move, nextBoard, reward: float):
+        
+        discount = self.discount
+        alpha = self.alpha
+        qval = self.getQValue(board, move)
+        nextVal = self.getValue(nextBoard)
+
+        newQVal = qval + alpha * (reward + (discount * nextVal) - qval)
+
+        self.qVals[(board, move)] = newQVal
+
+    def getPolicy(self, board):
+        return self.computeActionFromQValues(board)
+
+    def getValue(self, board):
+        return self.computeValueFromQValues(board)
+    
+    
+
+
