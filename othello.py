@@ -1,5 +1,5 @@
 
-import agents
+#Game rules and gameplay for Othello
 
 EMPTY, BLACK, WHITE, OUTER = '.', '@', 'o', '?'
 PIECES = (EMPTY, BLACK, WHITE, OUTER)
