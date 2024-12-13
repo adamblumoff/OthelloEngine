@@ -80,7 +80,7 @@ def RunMultipleSelectedSimulations(num_simulations, epochs, agent_name, opponent
     # print(agent_win_percentage_dict)
 def RunAllSimulations(epochs):
     auto_agents = ["ab-weighted-diff", "QLearning"]
-    opponents = ["ab-weighted-diff", "random"]
+    opponents = ["ab-weighted-diff", "QLearning", "random"]
     agent_win_percentage_dict = {"epochs" : [i for i in range(1,epochs+1)]}
     for i in auto_agents:
         for j in opponents:
