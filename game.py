@@ -34,45 +34,20 @@ def set_choice_random(options, black_name, white_name):
         white = options[white_name]
     return black, white
 
+
+
+def get_players(black, white):
+    QLearning = agents.QLearning()
+    options = { 'random': agents.random_strategy,
+                'max-diff': agents.maximizer(othello.score),
+                'max-weighted-diff': agents.maximizer(agents.weighted_score),
+                'ab-diff': agents.alphabeta_searcher(3, othello.score),
+                'ab-weighted-diff':
+                    agents.alphabeta_searcher(3, agents.weighted_score), 
+                'QLearning': QLearning.QLearningAgent()}
+    return set_choice(options, black, white)
+
 def set_choice(options, black_name, white_name):
     black = options[black_name]
     white = options[white_name]
     return black, white
-
-def get_players():
-    print('Welcome to OTHELLO!')
-    options = { 'human': human,
-                'random': agents.random_strategy,
-                'max-diff': agents.maximizer(othello.score),
-                'max-weighted-diff': agents.maximizer(agents.weighted_score),
-                'ab-diff': agents.alphabeta_searcher(3, othello.score),
-                'ab-weighted-diff':
-                    agents.alphabeta_searcher(3, agents.weighted_score) }
-    black = get_choice('BLACK: choose a strategy', options)
-    white = get_choice('WHITE: choose a strategy', options)
-    return black, white
-
-def get_players_tournament(black, white):
-    options = { 'human': human,
-                'random': agents.random_strategy,
-                'max-diff': agents.maximizer(othello.score),
-                'max-weighted-diff': agents.maximizer(agents.weighted_score),
-                'ab-diff': agents.alphabeta_searcher(3, othello.score),
-                'ab-weighted-diff':
-                    agents.alphabeta_searcher(3, agents.weighted_score) }
-    return set_choice(options, black, white)
-
-def main():
-    try:
-        black, white = get_players()
-        board, score = othello.play(black, white)
-    except othello.IllegalMoveError as e:
-        print(e)
-    except EOFError as e:
-        print('Goodbye.')
-    print('Final score:', score)
-    print('%s wins!' % ('Black' if score > 0 else 'White'))
-    print(othello.print_board(board))
-
-if __name__ == "__main__":
-    main()
