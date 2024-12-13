@@ -91,7 +91,7 @@ def play(black_strategy, white_strategy):
         move = get_move(strategy(player), player, board)
         make_move(move, player, board)
         player = next_player(board, player)
-    agents.QLearning().save()
+    #agents.QLearning().save()
     return board, score(BLACK, board)
 
 def next_player(board, prev_player):
