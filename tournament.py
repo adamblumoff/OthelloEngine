@@ -21,6 +21,7 @@ def GetPlayersTournament(black, white):
 def RunSelectedSimulation(epochs, agent_name, opponent_name):
     white_wins, black_wins, opponent_wins, agent_wins = 0, 0, 0, 0
     agent_win_percentage_dict = {}
+    
     for i in range(int(epochs/2)):
         try:
             black, white = GetPlayersTournament(agent_name, opponent_name)
@@ -34,6 +35,9 @@ def RunSelectedSimulation(epochs, agent_name, opponent_name):
             black_wins += 1
         else:
             white_wins += 1
+
+
+
 
     agent_wins += black_wins
     opponent_wins += white_wins
@@ -63,25 +67,6 @@ def RunSelectedSimulation(epochs, agent_name, opponent_name):
     agent_win_percentage_dict.update({agent_name: agent_win_percentage})
 
     return agent_win_percentage_dict
-
-def RunMultipleSelectedSimulations(num_simulations, epochs, agent_name, opponent_name):
-    agent_win_percentage_dict = {}
-    for i in range(num_simulations):
-        simulation = RunSelectedSimulation(epochs, agent_name, opponent_name)
-        for key in simulation:
-            if key in agent_win_percentage_dict:
-                agent_win_percentage_dict[key] += simulation[key]
-            else:
-                agent_win_percentage_dict.update(simulation)
-    
-    SetAverageValues(agent_win_percentage_dict, num_simulations)
-    
-    print(agent_win_percentage_dict)
-
-def SetAverageValues(total_dict, num_simulations):
-    for key in total_dict:
-        total_dict[key] /= num_simulations
-    return total_dict
     
 def ListAllAgents():
     print('Here are the list of agents you can choose from:')
@@ -98,13 +83,15 @@ def StartTournament():
     ListAllAgents()
     agent = input('Enter the name of the agent you want to test: ')
     opponent = input('Enter the name of the opponent you want to test against: ')
-    num_simulations = int(input('Enter the number of simulations you want to run: '))
-    epochs = int(input('Enter the number of epochs you want to run for each simulation: '))
-    return agent, opponent, num_simulations, epochs
+    epochs = int(input('Enter the number of games you want to run for each simulation: '))
+    return agent, opponent, epochs
 
 def DebugTournament():
-    agent, opponent, num_simulations, epochs = 'QLearning', 'random', 1, 1000
-    RunMultipleSelectedSimulations(num_simulations, epochs, agent, opponent)
+    random.seed(1)
+    agent, opponent, epochs = 'QLearning', 'ab-weighted-diff', 20
+    simulation = RunSelectedSimulation(epochs, agent, opponent)
+    print(simulation)
+
 def main():
     DebugTournament()
     #agent, opponent, num_simulations, epochs = StartTournament()

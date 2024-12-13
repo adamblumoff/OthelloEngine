@@ -1,6 +1,7 @@
 import othello
 import random
 import heapq
+import pickle
 
 def random_strategy(player, board):
     return random.choice(othello.legal_moves(player, board))
@@ -93,13 +94,14 @@ def alphabeta_searcher(depth, evaluate):
     return strategy
 
 
-class QLearning():
-    def __init__(self, alpha=0.1, epsilon=1, discount=0.9):
+class QLearning(): #Code adapted from Problem Set 4
+    def __init__(self, alpha=0.01, epsilon=1, discount=0.9):
         
         self.alpha = alpha
         self.epsilon = epsilon
         self.discount = discount
-        self.qVals = {}
+        self.qVals = self.load()
+        
 
     def getQValue(self, board, move):
         
@@ -129,8 +131,6 @@ class QLearning():
         return random.choice(bestMoves) if len(bestMoves) > 0 else None
 
     def getMove(self, player, board):
-        
-
         legalMoves = othello.legal_moves(player, board)
         move = None
         
@@ -145,7 +145,13 @@ class QLearning():
     def flipCoin(self, prob):
         r = random.random()
         return r < prob
+    
+    def numGames(self, games):
+        if games > 0:
+            return self.qVals
+        return {}
 
+    
     def update(self, player, prev_board, move, board):
         
         reward = weighted_score(player, board) - weighted_score(player, prev_board)
@@ -154,15 +160,14 @@ class QLearning():
         qval = self.getQValue(prev_board, move)
         nextVal = self.getValue(player, board)
         
-        self.EpsilonDecay()
-        
+        self.epsilonDecay()
         
         newQVal = qval + alpha * (reward + (discount * nextVal) - qval)
-
+        
         self.qVals[(tuple(prev_board), move)] = newQVal
-
-    def EpsilonDecay(self):
-        if self.epsilon > 0.0:
+        
+    def epsilonDecay(self):
+        if self.epsilon > 0.05:
             self.epsilon -= 0.05
 
     def getPolicy(self, player, board):
@@ -171,6 +176,17 @@ class QLearning():
     def getValue(self, player, board):
         return self.computeValueFromQValues(player, board)
     
+    def save(self, filename = 'q_table2.pk1'):
+        q_vals = self.qVals
+        with open(filename, 'wb') as f:
+            pickle.dump(q_vals, f)
+
+    def load(self, filename="q_table2.pk1"):
+        try:
+            with open(filename, 'rb') as f:
+                return pickle.load(f)
+        except FileNotFoundError:
+            return {}  
     def QLearningAgent(self):
        def strategy(player, prev_board):
             move = self.getMove(player, prev_board)
