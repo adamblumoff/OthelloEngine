@@ -1,5 +1,4 @@
 
-import random
 import agents
 
 EMPTY, BLACK, WHITE, OUTER = '.', '@', 'o', '?'
@@ -68,8 +67,6 @@ def make_flips(move, player, board, direction):
     while square != bracket:
         board[square] = player
         square += direction
-
-
 
 
 class IllegalMoveError(Exception):
