@@ -6,14 +6,6 @@ import pickle
 def random_strategy(player, board):
     return random.choice(othello.legal_moves(player, board))
 
-def maximizer(evaluate):
-#
-    def strategy(player, board):
-#
-        def score_move(move):
-            return evaluate(player, othello.make_move(move, player, list(board)))
-        return max(othello.legal_moves(player, board), key=score_move)
-    return strategy
 
 SQUARE_WEIGHTS = [
     0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
@@ -95,7 +87,7 @@ def alphabeta_searcher(depth, evaluate):
 
 
 class QLearning(): #Code adapted from Problem Set 4
-    def __init__(self, alpha=0.01, epsilon=1, discount=0.9):
+    def __init__(self, alpha=.1, epsilon=.2, discount=0.9):
         
         self.alpha = alpha
         self.epsilon = epsilon
@@ -104,7 +96,6 @@ class QLearning(): #Code adapted from Problem Set 4
         
 
     def getQValue(self, board, move):
-        
         if (tuple(board), move) in self.qVals:
             return self.qVals[(tuple(board), move)]
         
@@ -136,9 +127,11 @@ class QLearning(): #Code adapted from Problem Set 4
         
         if(self.flipCoin(self.epsilon)):
             move = random.choice(legalMoves)
+            
         
         elif len(legalMoves) > 0: 
             move = self.getPolicy(player, board)
+            
 
         return move
     
@@ -160,15 +153,11 @@ class QLearning(): #Code adapted from Problem Set 4
         qval = self.getQValue(prev_board, move)
         nextVal = self.getValue(player, board)
         
-        self.epsilonDecay()
         
         newQVal = qval + alpha * (reward + (discount * nextVal) - qval)
         
         self.qVals[(tuple(prev_board), move)] = newQVal
         
-    def epsilonDecay(self):
-        if self.epsilon > 0.05:
-            self.epsilon -= 0.05
 
     def getPolicy(self, player, board):
         return self.computeActionFromQValues(player, board)
@@ -194,5 +183,4 @@ class QLearning(): #Code adapted from Problem Set 4
             self.update(player, prev_board, move, board)
             return self.getMove(player, prev_board)
        return strategy
-
 

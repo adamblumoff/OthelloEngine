@@ -1,6 +1,5 @@
 
-import random
-import agents
+#Game rules and gameplay for Othello
 
 EMPTY, BLACK, WHITE, OUTER = '.', '@', 'o', '?'
 PIECES = (EMPTY, BLACK, WHITE, OUTER)
@@ -70,8 +69,6 @@ def make_flips(move, player, board, direction):
         square += direction
 
 
-
-
 class IllegalMoveError(Exception):
     def __init__(self, player, move, board):
         self.player = player
@@ -94,8 +91,8 @@ def play(black_strategy, white_strategy):
         move = get_move(strategy(player), player, board)
         make_move(move, player, board)
         player = next_player(board, player)
-    agents.QLearning().save()
     return board, score(BLACK, board)
+   
 
 def next_player(board, prev_player):
     opp = opponent(prev_player)
