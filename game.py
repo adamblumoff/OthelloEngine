@@ -41,9 +41,9 @@ def get_players(black, white):
     options = { 'random': agents.random_strategy,
                 'max-diff': agents.maximizer(othello.score),
                 'max-weighted-diff': agents.maximizer(agents.weighted_score),
-                'ab-diff': agents.alphabeta_searcher(3, othello.score),
+                'ab-diff': agents.pvs_searcher(3, othello.score),
                 'ab-weighted-diff':
-                    agents.alphabeta_searcher(3, agents.weighted_score), 
+                    agents.pvs_searcher(3, agents.weighted_score), 
                 'QLearning': QLearning.QLearningAgent()}
     return set_choice(options, black, white)
 

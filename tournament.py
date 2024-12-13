@@ -64,7 +64,7 @@ def RunSelectedSimulation(epochs, agent_name, opponent_name):
     return agent_win_percentage_aggregate
 
 def RunSelectedSimulationDebug(epochs, agent_name, opponent_name):
-    white_wins, black_wins, opponent_wins, agent_wins = 0, 0, 0, 0
+    white_wins, black_wins, opponent_wins, agent_wins, score = 0, 0, 0, 0, 0
     agent_win_percentage_dict = {}
     
     for i in range(int(epochs/2)):
@@ -130,7 +130,7 @@ def RunMultipleSelectedSimulations(num_simulations, epochs, agent_name, opponent
 def RunAllSimulations(epochs):
     auto_agents = ["ab-weighted-diff", "QLearning"]
     opponents = ["ab-weighted-diff", "QLearning", "random"]
-    agent_win_percentage_dict = {"epochs" : [i for i in range(1,epochs+1)]}
+    agent_win_percentage_dict = {"epochs" : [i for i in range(1, epochs+1)]}
     for i in auto_agents:
         for j in opponents:
             print(f"{i} {j}")

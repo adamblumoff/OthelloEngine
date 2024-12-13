@@ -2,6 +2,7 @@ import othello
 import random
 import heapq
 import pickle
+import os
 
 def random_strategy(player, board):
     return random.choice(othello.legal_moves(player, board))
@@ -53,13 +54,13 @@ def final_value(player, board):
 
 
 
-def alphabeta(player, board, alpha, beta, depth, evaluate):
+def pvs(player, board, alpha, beta, depth, evaluate):
 #
     if depth == 0:
         return evaluate(player, board), None
 #
     def value(board, alpha, beta):
-        return -alphabeta(othello.opponent(player), board, -beta, -alpha, depth-1, evaluate)[0]
+        return -pvs(othello.opponent(player), board, -beta, -alpha, depth-1, evaluate)[0]
     
     moves = othello.legal_moves(player, board)
     if not moves:
@@ -88,9 +89,9 @@ def alphabeta(player, board, alpha, beta, depth, evaluate):
 
 
 
-def alphabeta_searcher(depth, evaluate):
+def pvs_searcher(depth, evaluate):
     def strategy(player, board):
-        return alphabeta(player, board, MIN_VALUE, MAX_VALUE, depth, evaluate)[1]
+        return pvs(player, board, MIN_VALUE, MAX_VALUE, depth, evaluate)[1]
     return strategy
 
 
@@ -166,7 +167,7 @@ class QLearning(): #Code adapted from Problem Set 4
         
         self.qVals[(tuple(prev_board), move)] = newQVal
         
-
+        
     def getPolicy(self, player, board):
         return self.computeActionFromQValues(player, board)
 
@@ -175,14 +176,16 @@ class QLearning(): #Code adapted from Problem Set 4
     
     def save(self, filename = 'q_table2.pk1'):
         q_vals = self.qVals
-        with open(filename, 'wb') as f:
+        with open(filename, 'wb') as f: 
             pickle.dump(q_vals, f)
+            
+    
 
     def load(self, filename="q_table2.pk1"):
         try:
             with open(filename, 'rb') as f:
-                return pickle.load(f)
-        except FileNotFoundError:
+               return pickle.load(f)
+        except EOFError:
             return {}  
     def QLearningAgent(self):
        def strategy(player, prev_board):
