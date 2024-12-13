@@ -60,7 +60,8 @@ def get_players_tournament(black, white):
                 'max-weighted-diff': agents.maximizer(agents.weighted_score),
                 'ab-diff': agents.alphabeta_searcher(3, othello.score),
                 'ab-weighted-diff':
-                    agents.alphabeta_searcher(3, agents.weighted_score) }
+                    agents.alphabeta_searcher(3, agents.weighted_score),
+                'QLearning': agents.QLearning().QLearningAgent()}
     return set_choice(options, black, white)
 
 def main():
