@@ -116,15 +116,6 @@ def run_simulation_task(args):
 
 
 def RunAllSimulations(epochs):
-    """
-    Runs multiple simulations in parallel for different agent and opponent combinations.
-    Args:
-        epochs (int): Number of games per simulation.
-        agent_algorithms (list): List of agent algorithms.
-        opponent_algorithms (list): List of opponent algorithms.
-    Returns:
-        dict: Results of all simulations aggregated.
-    """
     agent_algorithms = ["QLearning", 'ab-weighted-diff']
     opponents = ["random", "QLearning", 'ab-weighted-diff']
     # Create all combinations of agent vs opponent algorithms
