@@ -25,12 +25,8 @@ def RunSelectedSimulation(epochs, agent_name, opponent_name):
             print('Goodbye.')
             
         if score > 0:
-            # print(f"{agent_name} black")
-            # print("WIN")
             black_wins += 1
         else:
-            # print(f"{agent_name} black")
-            # print("LOSS")
             white_wins += 1
         agent_win_percentage = (black_wins / (i+1)) * 100
         agent_win_percentage_aggregate.append(agent_win_percentage)
@@ -57,24 +53,14 @@ def RunSelectedSimulation(epochs, agent_name, opponent_name):
             print('Goodbye.')
             
         if score > 0:
-            # print(f"{agent_name} white")
-            # print("LOSS")
             black_wins += 1
         else:
-            # print(f"{agent_name} white")
-            # print("WIN")
             white_wins += 1
         agent_win_percentage = (white_wins / (i+1)) * 100
         total_win_percentage = ((agent_wins+white_wins)/(i+(epochs/2)+1)) * 100
         agent_win_percentage_aggregate.append(total_win_percentage)
     
     print(f"{agent_name} {opponent_name} done" )
-    # agent_wins += white_wins
-    # opponent_wins += black_wins
-
-        
-    # agent_win_percentage = (agent_wins / (agent_wins + opponent_wins)) * 100
-    # agent_win_percentage_dict.update({agent_name: agent_win_percentage})
     return agent_win_percentage_aggregate, agent_completion_time
 
 def RunMultipleSelectedSimulations(num_simulations, epochs, agent_name, opponent_name):
@@ -82,27 +68,9 @@ def RunMultipleSelectedSimulations(num_simulations, epochs, agent_name, opponent
     for i in range(num_simulations):
 
         return RunSelectedSimulation(epochs, agent_name, opponent_name)
-    #     for key in simulation:
-    #         if key in agent_win_percentage_dict:
-    #             agent_win_percentage_dict[key] += simulation[key]
-    #         else:
-    #             agent_win_percentage_dict.update(simulation)
-    #         print(agent_win_percentage_dict)
-    
-    # SetAverageValues(agent_win_percentage_dict, num_simulations)
-    
-    # print(agent_win_percentage_dict)
-import multiprocessing
 
 
 def run_simulation_task(args):
-    """
-    Wrapper function to call RunSelectedSimulation.
-    Args:
-        args (tuple): (epochs, agent_name, opponent_name)
-    Returns:
-        dict: Contains the results of the simulation.
-    """
     
     epochs, agent_name, opponent_name = args
     print(f"{agent_name} {opponent_name}")
@@ -141,28 +109,7 @@ def RunAllSimulations(epochs):
             
 
     return simulation_results
-# def RunAllSimulations(epochs):
-#     auto_agents = ["ab-weighted-diff", "QLearning"]
-#     opponents = ["ab-weighted-diff", "QLearning", "random"]
-#     agent_win_percentage_dict = {"epochs" : [i for i in range(1,epochs+1)]}
-#     for i in auto_agents:
-#         for j in opponents:
-#             print(f"{i} {j}")
-#             win_pct, epoch_times = RunSelectedSimulation(epochs, i, j)
-#             agent_win_percentage_dict.update({f"{i}_{j}_win_pct" : win_pct})
-#             agent_win_percentage_dict.update({f"{i}_{j}_times" : epoch_times})
 
-#     #     for key in simulation:
-#     #         if key in agent_win_percentage_dict:
-#     #             agent_win_percentage_dict[key] += simulation[key]
-#     #         else:
-#     #             agent_win_percentage_dict.update(simulation)
-#     #         print(agent_win_percentage_dict)
-    
-#     # SetAverageValues(agent_win_percentage_dict, num_simulations)
-    
-#     print(agent_win_percentage_dict)
-#     return agent_win_percentage_dict
 def SetAverageValues(total_dict, num_simulations):
     for key in total_dict:
         total_dict[key] /= num_simulations

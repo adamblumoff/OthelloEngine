@@ -6,14 +6,6 @@ import pickle
 def random_strategy(player, board):
     return random.choice(othello.legal_moves(player, board))
 
-def maximizer(evaluate):
-#
-    def strategy(player, board):
-#
-        def score_move(move):
-            return evaluate(player, othello.make_move(move, player, list(board)))
-        return max(othello.legal_moves(player, board), key=score_move)
-    return strategy
 
 SQUARE_WEIGHTS = [
     0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
