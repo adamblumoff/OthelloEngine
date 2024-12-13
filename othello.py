@@ -1,5 +1,6 @@
-import random
 
+import random
+import agents
 
 EMPTY, BLACK, WHITE, OUTER = '.', '@', 'o', '?'
 PIECES = (EMPTY, BLACK, WHITE, OUTER)
@@ -93,6 +94,7 @@ def play(black_strategy, white_strategy):
         move = get_move(strategy(player), player, board)
         make_move(move, player, board)
         player = next_player(board, player)
+    agents.QLearning().save()
     return board, score(BLACK, board)
 
 def next_player(board, prev_player):
@@ -118,7 +120,6 @@ def score(player, board):
         if piece == player: mine += 1
         elif piece == opp: theirs += 1
     return mine - theirs
-
 
 
 

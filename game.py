@@ -47,7 +47,8 @@ def get_players():
                 'max-weighted-diff': agents.maximizer(agents.weighted_score),
                 'ab-diff': agents.alphabeta_searcher(3, othello.score),
                 'ab-weighted-diff':
-                    agents.alphabeta_searcher(3, agents.weighted_score) }
+                    agents.alphabeta_searcher(3, agents.weighted_score), 
+                'QLearning': agents.QLearning().QLearningAgent()}
     black = get_choice('BLACK: choose a strategy', options)
     white = get_choice('WHITE: choose a strategy', options)
     return black, white
